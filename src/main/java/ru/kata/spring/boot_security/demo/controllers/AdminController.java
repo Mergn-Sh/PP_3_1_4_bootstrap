@@ -39,7 +39,7 @@ public class AdminController {
     public String addUser(Model model){
         User user = new User();
         model.addAttribute("newUser", user);
-        Set<Role> roles = Set.of(roleService.saveRole(new Role("ROLE_ADMIN")), roleService.saveRole(new Role("ROLE_USER")));
+        List<Role> roles = roleService.allRole();
         model.addAttribute("newSetRoles", roles);
 
         return "save-info";
@@ -56,20 +56,7 @@ public class AdminController {
     @GetMapping("/updateInfo/{id}")
     public String updateInfo(@PathVariable("id") Long id, Model model){
         model.addAttribute("updateUser", userService.getUser(id));
-        Set<Role> roles = userService.getUser(id).getRoles();
-        Set<Role> rolesFull = Set.of(new Role("ROLE_ADMIN"), new Role("ROLE_USER"));
-        Set<Role> roleUser = Set.of(new Role("ROLE_USER"));
-        if(roles.isEmpty()){
-            roles = Set.of(roleService.saveRole(new Role("ROLE_ADMIN")), roleService.saveRole(new Role("ROLE_USER")));
-            model.addAttribute("updateRole", roles);
-        } else if (roles.equals(rolesFull)) model.addAttribute("updateRole", roles);
-        else if (roles.equals(roleUser)) {
-            roles.add(roleService.saveRole(new Role("ROLE_ADMIN")));
-            model.addAttribute("updateRole", roles);
-        } else {
-            roles.add(roleService.saveRole(new Role("ROLE_USER")));
-            model.addAttribute("updateRole", roles);
-        }
+        model.addAttribute("updateRole", roleService.allRole());
 
         return "update-info";
     }
