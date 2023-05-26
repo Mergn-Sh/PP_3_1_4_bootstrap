@@ -18,13 +18,13 @@ import java.util.*;
 public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @GetMapping()
