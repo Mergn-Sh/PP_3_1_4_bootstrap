@@ -10,6 +10,7 @@ import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
 import java.util.*;
 
 
@@ -28,10 +29,15 @@ public class AdminController {
     }
 
     @GetMapping()
-    public String showAllUsers(Model model){
+    public String showAllUsers(Model model, Principal principal){
         List<User> allUsers = userService.allUsers();
         model.addAttribute("allUsers", allUsers);
-
+        User user = userService.findByEmail(principal.getName());
+        StringBuilder topLine = new StringBuilder(user.getEmail() + " with roles: ");
+        for (Role role: user.getRoles()) {
+            topLine.append(role.toString()).append(" ");
+        }
+        model.addAttribute("topLine", topLine.toString());
         return "all-users";
     }
 
@@ -63,7 +69,9 @@ public class AdminController {
 
     @PutMapping("/updateUser")
     public String updateUser(@ModelAttribute("user") User user){
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        if(!(userService.getUser(user.getId()).getPassword().equals(user.getPassword()))){
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }
         userService.updateUser(user);
 
         return "redirect:/admin";

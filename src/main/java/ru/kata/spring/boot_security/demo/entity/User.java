@@ -20,8 +20,8 @@ public class User implements UserDetails {
     private String surname;
     @Column(name = "email")
     private String email;
-    @Column(name = "username")
-    private String username;
+    @Column(name = "age")
+    private int age;
     @Column(name = "password")
     private String password;
     @ManyToMany
@@ -65,9 +65,14 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
+    public int getAge() {
+        return age;
     }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -89,9 +94,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -100,6 +102,11 @@ public class User implements UserDetails {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     public void setPassword(String password) {
