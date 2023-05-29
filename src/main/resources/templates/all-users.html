@@ -25,10 +25,18 @@
         <div class="col">
 
         </div>
+
         <div class="col-xl-10 bg-light py-2 px-5">
             <h2>Admin panel</h2>
             <input type="button" value="add" onclick="window.location.href = '/admin/addNewUser'">
             <br><br>
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" href="#tab1" data-toggle="tab">Раздел 1</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Раздел 2</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
             <div class=" border rounded border-black">
                 <h4 class="p-2 m-0 bg-light border-bottom px-4">All users</h4>
                 <div class="bg-white p-4">
@@ -71,6 +79,12 @@
         </tr>
         </tbody>
     </table>
+                </div>
+            </div>
+                    </div>
+                    <div class="tab-pane" id="tab2">
+                        <p>Привет, я в Разделе 2.</p>
+                    </div>
                 </div>
             </div>
         </div>
