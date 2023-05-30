@@ -32,24 +32,30 @@ public class AdminController {
     public String showAllUsers(Model model, Principal principal){
         List<User> allUsers = userServiceImpl.allUsers();
         model.addAttribute("allUsers", allUsers);
-        User user = userServiceImpl.findByEmail(principal.getName());
-        StringBuilder topLine = new StringBuilder(user.getEmail() + " with roles: ");
-        for (Role role: user.getRoles()) {
+        User currentUser = userServiceImpl.findByEmail(principal.getName());
+        StringBuilder topLine = new StringBuilder(currentUser.getEmail() + " with roles: ");
+        for (Role role: currentUser.getRoles()) {
             topLine.append(role.toString()).append(" ");
         }
         model.addAttribute("topLine", topLine.toString());
-        return "all-users";
-    }
-
-    @GetMapping("/addNewUser")
-    public String addUser(Model model){
-        User user = new User();
-        model.addAttribute("newUser", user);
+        model.addAttribute("currentUser", currentUser);
+        User newUser = new User();
+        model.addAttribute("newUser", newUser);
         List<Role> roles = roleServiceImpl.allRole();
         model.addAttribute("newSetRoles", roles);
 
-        return "save-info";
+        return "all-users";
     }
+
+//    @GetMapping("/addNewUser")
+//    public String addUser(Model model){
+//        User user = new User();
+//        model.addAttribute("newUser", user);
+//        List<Role> roles = roleServiceImpl.allRole();
+//        model.addAttribute("newSetRoles", roles);
+//
+//        return "save-info";
+//    }
 
     @PostMapping("/saveUser")
     public String saveUser(@ModelAttribute("newUser") User user){

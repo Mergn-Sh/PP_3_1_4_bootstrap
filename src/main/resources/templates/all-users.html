@@ -21,19 +21,21 @@
 </div>
 
 <div class="container-fluid">
-    <div class="row" style="height: 100vh">
-        <div class="col">
+    <div class="row  tabbable tabs-left" style="height: 100vh">
+         <div class="col m-0 p-0">
+            <nav class="nav flex-column nav-pills">
+                <a class="nav-link   active" href="#tab3" data-toggle="tab">Admin</a>
+                <a class="nav-link  " href="#tab4" data-toggle="tab">User</a>
+            </nav>
+         </div>
 
-        </div>
-
-        <div class="col-xl-10 bg-light py-2 px-5">
+        <div class="col-xl-10 bg-light py-2 px-5 tab-content">
+            <div class="tab-pane active" id="tab3">
             <h2>Admin panel</h2>
-            <input type="button" value="add" onclick="window.location.href = '/admin/addNewUser'">
-            <br><br>
             <div class="tabbable">
                 <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link active" href="#tab1" data-toggle="tab">Раздел 1</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Раздел 2</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#tab1" data-toggle="tab">Users table</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">New User</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab1">
@@ -83,14 +85,87 @@
             </div>
                     </div>
                     <div class="tab-pane" id="tab2">
-                        <p>Привет, я в Разделе 2.</p>
+                        <div class=" border rounded border-black">
+                            <h4 class="p-2 m-0 bg-light border-bottom px-4">Add new user</h4>
+                            <div class="bg-white p-4 d-flex justify-content-center">
+                        <form th:method="POST" th:action="@{/admin/saveUser}" th:object="${newUser}" style="width: 400px" class="text-center">
+                            <div class="form-group">
+                            <label for="name" class="font-weight-bold">First name</label>
+                            <input type="text" class="form-control" th:field="*{name}" id="name" placeholder="First name">
+                            </div>
+                            <div class="form-group">
+                            <label for="surname" class="font-weight-bold">Last name</label>
+                            <input type="text" class="form-control" th:field="*{surname}" id="surname" placeholder="Last name">
+                            </div>
+                            <div class="form-group">
+                            <label for="age" class="font-weight-bold">Age</label>
+                            <input type="text" class="form-control" th:field="*{age}" id="age" placeholder="Age">
+                            </div>
+                            <div class="form-group">
+                            <label for="email" class="font-weight-bold">Email</label>
+                            <input type="text" class="form-control" th:field="*{email}" id="email" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                            <label for="password" class="font-weight-bold">Password</label>
+                            <input type="text" class="form-control" th:field="*{password}" id="password" placeholder="Password">
+                            </div>
+
+                                <label>Roles:
+                                    <input type="checkbox" name="roles"
+                                           th:each="role : ${newSetRoles}"
+                                           th:text="${role}"
+                                           th:value="${role.id}"
+                                           th:field="*{roles}"/>
+
+                                </label>
+                            <br>
+                            <input type="submit" value="Add new user" class="btn btn-success">
+                        </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="tab-pane" id="tab4">
+                <h2>User information-page</h2>
+                <div class=" border rounded border-black">
+                    <h4 class="p-2 m-0 bg-light border-bottom px-4">About user</h4>
+                    <div class="bg-white p-4">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Age</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="bg-light" th:each="cu : ${currentUser}">
+                                <td th:text="${cu.getId()}"/>
+                                <td th:text="${cu.getName()}"/>
+                                <td th:text="${cu.getSurname()}"/>
+                                <td th:text="${cu.getAge()}"/>
+                                <td th:text="${cu.getEmail()}"/>
+                                <td>
+                                    <div th:each="role: ${cu.getRoles()}">
+                                        <span th:if="(${role.getName()} == 'ROLE_ADMIN')" th:utext="ADMIN"></span>
+                                        <span th:if="(${role.getName()} == 'ROLE_USER')" th:utext="USER"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
