@@ -19,13 +19,13 @@ import java.util.*;
 public class AdminController {
     private final UserServiceImpl userServiceImpl;
     private final RoleServiceImpl roleServiceImpl;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public AdminController(UserServiceImpl userServiceImpl, RoleServiceImpl roleServiceImpl) {
+    public AdminController(UserServiceImpl userServiceImpl, RoleServiceImpl roleServiceImpl, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userServiceImpl = userServiceImpl;
         this.roleServiceImpl = roleServiceImpl;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @GetMapping()
@@ -47,16 +47,6 @@ public class AdminController {
         return "all-users";
     }
 
-//    @GetMapping("/addNewUser")
-//    public String addUser(Model model){
-//        User user = new User();
-//        model.addAttribute("newUser", user);
-//        List<Role> roles = roleServiceImpl.allRole();
-//        model.addAttribute("newSetRoles", roles);
-//
-//        return "save-info";
-//    }
-
     @PostMapping("/saveUser")
     public String saveUser(@ModelAttribute("newUser") User user){
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -65,19 +55,12 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/updateInfo/{id}")
-    public String updateInfo(@PathVariable("id") Long id, Model model){
-        model.addAttribute("updateUser", userServiceImpl.getUser(id));
-        model.addAttribute("updateRole", roleServiceImpl.allRole());
-
-        return "update-info";
-    }
-
-    @PutMapping("/updateUser")
-    public String updateUser(@ModelAttribute("user") User user){
+    @PatchMapping("/updateUser/{id}")
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam("roleIds") Set<Long> roleIds){
         if(!(userServiceImpl.getUser(user.getId()).getPassword().equals(user.getPassword()))){
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
+        userServiceImpl.setUserRoles(user, roleIds);
         userServiceImpl.updateUser(user);
 
         return "redirect:/admin";
