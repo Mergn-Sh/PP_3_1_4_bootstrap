@@ -1,9 +1,9 @@
 package ru.kata.spring.boot_security.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-
 import java.util.Objects;
 import java.util.Set;
 
@@ -12,9 +12,12 @@ import java.util.Set;
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    @Column(name = "name")
-    private String nameRole;
+
+    @Column(name = "role")
+    private String role;
+
 
     public Role() {
     }
@@ -23,13 +26,9 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public Role(String name) {
-        this.nameRole = name;
-    }
-
-    public Role(Long id, String name) {
+    public Role(Long id, String role) {
         this.id = id;
-        this.nameRole = name;
+        this.role = role;
     }
 
     public Long getId() {
@@ -40,25 +39,17 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getName() {
-        return this.nameRole;
+    public String getRole() {
+        return role;
     }
 
-    public void setName(String name) {
-        this.nameRole = name;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override
     public String getAuthority() {
-        return getName();
-    }
-
-    @Override
-    public String toString() {
-        String result = this.nameRole;
-        if(result.equals("ROLE_ADMIN")) result = "Admin";
-        else if (result.equals("ROLE_USER")) result = "User";
-        return result;
+        return getRole();
     }
 
     @Override
@@ -66,11 +57,16 @@ public class Role implements GrantedAuthority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return Objects.equals(nameRole, role.nameRole);
+        return id.equals(role.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nameRole);
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return role;
     }
 }
